@@ -1,5 +1,9 @@
 package org.example;
 
+import org.example.annotations.After;
+import org.example.annotations.Before;
+import org.example.annotations.Test;
+
 public class CalculatorTest {
     @Test
     public void testSumSuccess() {
