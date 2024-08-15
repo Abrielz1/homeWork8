@@ -3,18 +3,14 @@ package org.example;
 import org.example.annotations.After;
 import org.example.annotations.Before;
 import org.example.annotations.Test;
-import org.junit.runner.Description;
-import org.junit.runner.notification.RunNotifier;
+import org.example.exceptions.AssertionException;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-public class Runner extends org.junit.runner.Runner {
-
-    public Runner() {
-    }
+public class Runner {
 
     public static void run(String packageName) {
         int testPassedCount = 0;
@@ -32,21 +28,14 @@ public class Runner extends org.junit.runner.Runner {
                 System.out.println("Test " + methodName + " passed");
             }
             catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
-                e.printStackTrace();
+                if (e.getCause() instanceof AssertionException) {
+                    testFailedCount++;
+                    System.out.printf("Test on method: %s failed trace: %s%n", methodName, e.getCause().getMessage());
+                }
             }
         }
 
-        System.out.printf("Tests passed: %d, Tests failed: %d%n", testPassedCount, testFailedCount);
-    }
-
-    @Override
-    public Description getDescription() {
-        return null;
-    }
-
-    @Override
-    public void run(RunNotifier runNotifier) {
-
+        System.out.printf("Tests passed: %s, Tests failed: %s%n", testPassedCount, testFailedCount);
     }
 }
 
