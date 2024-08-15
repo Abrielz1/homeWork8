@@ -3,7 +3,9 @@ package org.example;
 import org.example.annotations.After;
 import org.example.annotations.Before;
 import org.example.annotations.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(Runner.class)
 public class CalculatorTest {
     @Test
     public void testSumSuccess() {

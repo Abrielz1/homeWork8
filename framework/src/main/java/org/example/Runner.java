@@ -3,51 +3,51 @@ package org.example;
 import org.example.annotations.After;
 import org.example.annotations.Before;
 import org.example.annotations.Test;
+import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-public class Runner {
+public class Runner extends org.junit.runner.Runner {
 
-     public static void main(String[] args) {
-         Runner.run("org.example");
+    public Runner() {
     }
 
     public static void run(String packageName) {
-      List<Class<?>> classes = Runner.getAllClassesFrom(packageName);
-        for (Class<?> aClass : classes) {
-            for (Method method : aClass.getMethods()) {
-                if (method.isAnnotationPresent(Test.class)){
+        int testPassedCount = 0;
+        int testFailedCount = 0;
+        final Reflections reflections = new Reflections(packageName, new MethodAnnotationsScanner());
+        final Set<Method> methods = reflections.getMethodsAnnotatedWith(Before.class);
+        methods.addAll(reflections.getMethodsAnnotatedWith(Test.class));
+        methods.addAll(reflections.getMethodsAnnotatedWith(After.class));
 
-                }
-
-                if (method.isAnnotationPresent(Before.class)){
-
-                }
-
-                if (method.isAnnotationPresent(After.class)){
-
-                }
+        for (Method method : methods) {
+            final String methodName = method.getName();
+            try {
+                method.invoke(method.getDeclaringClass().getDeclaredConstructor().newInstance());
+                testPassedCount++;
+                System.out.println("Test " + methodName + " passed");
+            }
+            catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
+                e.printStackTrace();
             }
         }
+
+        System.out.printf("Tests passed: %d, Tests failed: %d%n", testPassedCount, testFailedCount);
     }
 
-    private static List<Class<?>> getAllClassesFrom(String packageName) {
+    @Override
+    public Description getDescription() {
+        return null;
+    }
 
-        return new Reflections(packageName, new SubTypesScanner(false))
-                .getAllTypes()
-                .stream()
-                .map(name -> {
-                    try {
-                        return Class.forName(name);
-                    } catch (ClassNotFoundException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+    @Override
+    public void run(RunNotifier runNotifier) {
+
     }
 }
+
+
