@@ -3,10 +3,11 @@ package org.example;
 import org.example.annotations.After;
 import org.example.annotations.Before;
 import org.example.annotations.Test;
+import org.example.exceptions.AssertionException;
 
 public class CalculatorTest {
     @Test
-    public void testSumSuccess() {
+    public void testSumSuccess() throws AssertionException {
         Calculator calculator = new Calculator(1, 2);
         int result = calculator.sum();
         System.out.println(result);
@@ -15,7 +16,7 @@ public class CalculatorTest {
     }
 
     @Test
-    public void testSumFailed() {
+    public void testSumFailed() throws AssertionException {
         Calculator calculator = new Calculator(1, 2);
         int result = calculator.sum();
         System.out.println(result);

@@ -1,7 +1,7 @@
 package org.example.exceptions;
 
-public class AssertionException extends RuntimeException {
-    public AssertionException(String message) {
+public class AssertionException extends Exception {
+    public AssertionException(String message, String cause) {
         super(message);
     }
 }
