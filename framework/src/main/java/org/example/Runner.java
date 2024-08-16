@@ -37,6 +37,10 @@ public class Runner {
 
         System.out.printf("Tests passed: %s, Tests failed: %s%n", testPassedCount, testFailedCount);
     }
+
+    public static void main(String[] args) {
+        run("org.example");
+    }
 }
 
 
