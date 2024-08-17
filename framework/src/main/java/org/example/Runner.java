@@ -5,17 +5,17 @@ import org.example.annotations.Before;
 import org.example.annotations.Test;
 import org.example.exceptions.AssertionException;
 import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
+import org.reflections.scanners.Scanners;
 
 public class Runner {
 
     public static void run(String packageName) {
         int testPassedCount = 0;
         int testFailedCount = 0;
-        final Reflections reflections = new Reflections(packageName, new MethodAnnotationsScanner());
+        final Reflections reflections = new Reflections(packageName, Scanners.MethodsAnnotated);
         final Set<Method> methods = reflections.getMethodsAnnotatedWith(Before.class);
         methods.addAll(reflections.getMethodsAnnotatedWith(Test.class));
         methods.addAll(reflections.getMethodsAnnotatedWith(After.class));
